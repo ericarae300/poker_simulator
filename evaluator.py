@@ -1,22 +1,9 @@
-"""
-Poker hand evaluation and ranking system for Texas Hold'em.
-
-This module provides functions to evaluate poker hands, rank them, and determine
-the best 5-card hand from a 7-card combination.
-
-Module attributes:
-    suits: List of card suits
-    ranks: List of card ranks with numeric values (2-14, A=12)
-    hand_rankings: Dictionary mapping hand names to ranking values
-"""
-
 from collections import Counter
 from itertools import combinations
 from typing import List, Tuple, Dict
 
 # Define suits and ranks of a standard deck of cards
 suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-# Ranks with numeric values: 2-10 have their index as value, J=9, Q=10, K=11, A=12
 ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
 
 # Define hand rankings
@@ -35,29 +22,15 @@ hand_rankings: Dict[str, int] = {
 
 
 def is_flush(cards: List) -> bool:
-    """
-    Check if a hand is a flush.
-
-    Args:
-        cards: List of Card objects
-
-    Returns:
-        True if all cards are the same suit, False otherwise
-    """
+    # checks if a hand is a flush, returns True if all cards are the same suit
+    # cards is a list of card objects
     hand_suits = [card.suit for card in cards]
     return len(set(hand_suits)) == 1
 
 
 def is_straight(values: List[int]) -> bool:
-    """
-    Check if a hand contains a straight.
-
-    Args:
-        values: List of card rank values (0-12)
-
-    Returns:
-        True if hand contains a straight (including A-2-3-4-5 wheel), False otherwise
-    """
+    # checks if hand is a straight. values is a list of card rank values (0-12)
+    # returns true if hand contains a straight
     values = sorted(set(values))
     if len(values) < 5:
         return False
@@ -69,24 +42,14 @@ def is_straight(values: List[int]) -> bool:
     return False
 
 def evaluate_hand(cards: List) -> Tuple[Tuple[int, Tuple], str]:
-    """
-    Evaluate a 5-card poker hand and return its ranking.
-
-    Args:
-        cards: List of exactly 5 Card objects
-
-    Returns:
-        Tuple of (hand_ranking_tuple, hand_name) where:
-        - hand_ranking_tuple: (ranking_value, tiebreaker_values)
-        - hand_name: Human-readable hand name
-    """
+    # evaluates a five card poker hand, cards is a list of exactly 5 card objects
+    # returns tuple (hand_ranking_tuple, hand_name), where hand_ranking_tuple is (ranking_value, tiebreaker_values)
     rank_values = [ranks.index(card.rank) for card in cards]
     rank_counts = Counter(rank_values)  # count occurrences of each rank
     most_common = rank_counts.most_common()  # list of (rank, count) tuples sorted by frequency
-
-    # Check for flush and straight
     flush = is_flush(cards)
     straight = is_straight(rank_values)
+    
     # Return (hand ranking, tuple of tiebreaker values in descending order of importance)
     if flush and straight:
         high_card = max(rank_values)
@@ -119,18 +82,10 @@ def evaluate_hand(cards: List) -> Tuple[Tuple[int, Tuple], str]:
 
 
 def best(seven_cards: List) -> Tuple[Tuple[int, Tuple], Tuple]:
-    """
-    Find the best 5-card hand from a 7-card combination.
+    # finds the best 5 card hand from a 7 card combo (hole cards + community cards)
+    # returns tuple (best_rank_tuple, best_hand), best_rank_tuple is (ranking_value, tiebreaker_values)
+    # best_hand is a tuple of the best 5 card objects
 
-    Args:
-        seven_cards: List of exactly 7 Card objects (hole cards + community cards)
-
-    Returns:
-        Tuple of (best_rank_tuple, best_hand) where:
-        - best_rank_tuple: (ranking_value, tiebreaker_values)
-        - best_hand: Tuple of the best 5 Card objects
-    """
-    # Initialize best rank and hand
     best_rank = (-1, ())  # hand ranking, tiebreak cards
     best_hand = None
 
@@ -141,7 +96,7 @@ def best(seven_cards: List) -> Tuple[Tuple[int, Tuple], Tuple]:
     for combo in total_combinations:
         rank = evaluate_hand(combo)
         # If current rank is better than the best found, update best rank and hand
-        if rank[0] > best_rank:
-            best_rank = rank[0]
+        if rank > best_rank:
+            best_rank = rank
             best_hand = combo
     return best_rank, best_hand

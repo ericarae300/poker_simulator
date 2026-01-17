@@ -1,24 +1,17 @@
-"""
-Main poker simulator game runner.
-
-This module demonstrates a complete Texas Hold'em game with multiple players.
-"""
+# main script to run game
 
 from deck import Card, Deck, Player, TexasHoldem
 
-
 def demo_game():
-    """Run a demonstration Texas Hold'em game with 3 players."""
-    print("=" * 60)
+    # runs demo game with 3 players 
     print("TEXAS HOLD'EM POKER SIMULATOR")
-    print("=" * 60)
     print()
 
     # Create players
     players = [
-        Player("Alice", chips=1000),
-        Player("Bob", chips=1000),
-        Player("Charlie", chips=1000)
+        Player("John", chips=1000),
+        Player("Ella", chips=1000),
+        Player("Ava", chips=1000)
     ]
 
     # Initialize game
@@ -30,54 +23,43 @@ def demo_game():
     print()
 
     # Deal hole cards
-    print("-" * 60)
     print("DEALING HOLE CARDS...")
-    print("-" * 60)
     game.deal_hole_cards()
     for p in players:
         print(f"{p.name}'s hole cards: {p.hand}")
     print()
 
     # Deal flop
-    print("-" * 60)
     print("THE FLOP")
-    print("-" * 60)
     game.deal_flop()
     print(f"Community cards: {game.community_cards}")
     print()
 
     # Deal turn
-    print("-" * 60)
     print("THE TURN")
-    print("-" * 60)
     game.deal_turn()
     print(f"Community cards: {game.community_cards}")
     print()
 
     # Deal river
-    print("-" * 60)
     print("THE RIVER")
-    print("-" * 60)
     game.deal_river()
     print(f"Community cards: {game.community_cards}")
     print()
 
     # Showdown
-    print("=" * 60)
+    print("SHOWDOWN!!!")
     game.showdown()
-    print("=" * 60)
-
+    print()
 
 def demo_hand_evaluation():
-    """Demonstrate hand evaluation capabilities."""
-    print("\n" + "=" * 60)
+    # demos hand evaluation cababilities 
     print("HAND EVALUATION DEMO")
-    print("=" * 60)
     print()
 
     from evaluator import best
 
-    # Create a sample hand
+    # Create sample hand
     cards = [
         Card("Ace", "Hearts"),
         Card("King", "Hearts"),
@@ -104,8 +86,6 @@ def demo_hand_evaluation():
 
 
 if __name__ == "__main__":
-    # Run demo game
     demo_game()
-
-    # Run hand evaluation demo
+    
     demo_hand_evaluation()
